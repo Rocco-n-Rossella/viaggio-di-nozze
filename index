@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Diario di viaggio — Giappone</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Giappone">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#22395B">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23C2452A'/%3E%3Ctext x='50' y='66' font-size='48' text-anchor='middle' fill='white' font-family='sans-serif'%3E旅%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   TOKENS — colori tradizionali giapponesi (nihon no iro) + tipografia
+   =================================================================== */
+:root{
+  --sumi:#1C1B1A;        /* 墨 ink — testo principale */
+  --washi:#F6F1E7;       /* 生成り carta — sfondo */
+  --washi-deep:#EBE3D3;  /* carta più profonda — superfici carte */
+  --washi-card:#FCFAF4;  /* carta chiara — schede sopra washi-deep */
+  --kon:#22395B;         /* 紺 indigo — chrome primario, shinkansen */
+  --kon-soft:#3A5680;
+  --shu:#C2452A;         /* 朱 vermiglio — cta, alloggio, evidenza */
+  --shu-soft:#E1714F;
+  --matcha:#5C7A52;      /* 抹茶 — treno locale */
+  --sora:#4A7FA0;        /* 空色 cielo — volo */
+  --odo:#B07A2C;         /* 黄土 ocra — bus */
+  --seiji:#3E7B73;       /* 青磁 celadon — traghetto */
+  --tsuchi:#7C6A4E;      /* 土 terra — a piedi */
+  --kin:#A8843C;         /* 金 oro — accenti decorativi */
+  --kin-soft:#C9A857;
+  --mist:#8C8579;        /* testo secondario / didascalie */
+  --line:rgba(28,27,26,0.13);
+  --line-strong:rgba(28,27,26,0.22);
+  --shadow:0 1px 2px rgba(28,27,26,0.06), 0 6px 16px rgba(28,27,26,0.07);
+
+  --f-display:'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-body:'IBM Plex Sans', sans-serif;
+  --f-mono:'IBM Plex Mono', monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--washi);
+  color:var(--sumi);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-tap-highlight-color:transparent;
+  background-image:
+    radial-gradient(circle at 50% 100%, transparent 0, transparent 12px, rgba(194,69,42,0.09) 12px, rgba(194,69,42,0.09) 13px, transparent 13px),
+    radial-gradient(circle at 50% 100%, transparent 0, transparent 12px, rgba(194,69,42,0.09) 12px, rgba(194,69,42,0.09) 13px, transparent 13px);
+  background-size: 26px 26px;
+  background-position: 0 0, 13px 0;
+}
+button, input, textarea, select{font-family:inherit; font-size:16px;}
+button{touch-action:manipulation; cursor:pointer;}
+h1,h2,h3,h4{font-family:var(--f-display); margin:0; font-weight:700;}
+:focus-visible{outline:2.5px solid var(--shu); outline-offset:2px; border-radius:4px;}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
+
+.wrap{max-width:640px; margin:0 auto; padding:0 16px 96px;}
+
+/* ===================== LOADING ===================== */
+#loading{
+  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; color:var(--mist); font-family:var(--f-mono); letter-spacing:.04em;
+}
+.spinner{width:28px; height:28px; border:3px solid var(--line); border-top-color:var(--kon); border-radius:50%; animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ===================== HEADER ===================== */
+.appbar{padding:22px 0 14px; display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.appbar .eyebrow{font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; color:var(--mist); text-transform:uppercase;}
+.appbar h1{font-size:26px; color:var(--kon); margin-top:2px; line-height:1.15;}
+.hanko-seal{
+  width:38px; height:38px; border-radius:50%; background:var(--shu); color:var(--washi); flex:none;
+  display:flex; align-items:center; justify-content:center; font-family:var(--f-display); font-size:17px; font-weight:700;
+  border:1.5px solid #8C341E; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.5); margin-top:3px;
+}
+.appbar .dates{font-family:var(--f-mono); font-size:13px; color:var(--mist); margin-top:4px;}
+.icon-btn{
+  width:38px; height:38px; border-radius:10px; border:1.5px solid var(--line-strong); background:var(--washi-card);
+  display:flex; align-items:center; justify-content:center; flex:none; color:var(--sumi);
+}
+.icon-btn:active{background:var(--washi-deep);}
+
+/* ===================== SECTION HEADERS ===================== */
+.section-head{display:flex; align-items:baseline; justify-content:space-between; margin:30px 0 12px;}
+.section-head h2{font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--sumi); display:flex; align-items:center; gap:8px;}
+.section-head h2::before{content:''; width:7px; height:7px; background:var(--shu); transform:rotate(45deg); flex:none; display:inline-block;}
+.section-head .sub{font-family:var(--f-mono); font-size:11.5px; color:var(--mist);}
+
+/* ===================== BUTTONS ===================== */
+.btn{
+  appearance:none; border:none; border-radius:11px; padding:12px 18px; font-weight:600; font-size:14.5px;
+  display:inline-flex; align-items:center; gap:8px; line-height:1; min-height:46px;
+}
+.btn-primary{background:var(--shu); color:var(--washi); box-shadow:var(--shadow);}
+.btn-primary:active{background:#A6391F;}
+.btn-ghost{background:transparent; color:var(--kon); border:1.5px dashed var(--line-strong);}
+.btn-ghost:active{background:var(--washi-deep);}
+.btn-block{width:100%; justify-content:center;}
+.btn-sm{padding:8px 13px; min-height:36px; font-size:13px; border-radius:9px;}
+.btn-text{background:none; border:none; color:var(--mist); font-size:13px; text-decoration:underline; padding:4px 0;}
+.btn-danger-text{background:none; border:none; color:var(--shu); font-size:13px; padding:4px 0;}
+
+/* ===================== HERO — TABELLONE PARTENZE ===================== */
+.hero{
+  background-color: var(--kon);
+  background-image:
+    linear-gradient(to right, var(--kin-soft) 2px, transparent 2px), linear-gradient(to bottom, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(to left, var(--kin-soft) 2px, transparent 2px), linear-gradient(to bottom, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(to right, var(--kin-soft) 2px, transparent 2px), linear-gradient(to top, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(to left, var(--kin-soft) 2px, transparent 2px), linear-gradient(to top, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(165deg, var(--kon) 0%, #1A2D49 100%);
+  background-repeat: no-repeat;
+  background-size: 16px 2px, 2px 16px, 16px 2px, 2px 16px, 16px 2px, 2px 16px, 16px 2px, 2px 16px, 100% 100%;
+  background-position:
+    top 10px left 10px, top 10px left 10px,
+    top 10px right 10px, top 10px right 10px,
+    bottom 10px left 10px, bottom 10px left 10px,
+    bottom 10px right 10px, bottom 10px right 10px,
+    0 0;
+  border-radius:18px; padding:22px 20px 20px; color:var(--washi);
+  box-shadow:0 10px 30px rgba(20,30,50,0.28);
+  position:relative; overflow:hidden;
+}
+.hero::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
+}
+.hero-label{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9FB3CE; display:flex; align-items:center; gap:8px;}
+.hero-label .dot{width:6px; height:6px; border-radius:50%; background:var(--shu-soft); box-shadow:0 0 0 0 rgba(225,113,79,.6); animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(225,113,79,.55);}70%{box-shadow:0 0 0 7px rgba(225,113,79,0);}100%{box-shadow:0 0 0 0 rgba(225,113,79,0);}}
+.hero-route{font-family:var(--f-display); font-size:21px; font-weight:700; margin-top:10px; letter-spacing:.01em;}
+.hero-row{display:flex; align-items:flex-end; justify-content:space-between; margin-top:14px; gap:14px;}
+.hero-time{font-family:var(--f-mono); font-size:44px; font-weight:700; letter-spacing:.01em; display:flex;}
+.hero-time .d{display:inline-block; animation:flap .55s cubic-bezier(.2,.9,.25,1) backwards;}
+.hero-time .d:nth-child(1){animation-delay:.02s;} .hero-time .d:nth-child(2){animation-delay:.08s;}
+.hero-time .d:nth-child(3){animation-delay:.14s;} .hero-time .d:nth-child(4){animation-delay:.20s;}
+.hero-time .d:nth-child(5){animation-delay:.26s;}
+@keyframes flap{0%{opacity:0; transform:translateY(10px) rotateX(45deg); filter:blur(1px);} 100%{opacity:1; transform:translateY(0) rotateX(0); filter:blur(0);}}
+.hero-date{font-family:var(--f-mono); font-size:13px; color:#C7D4E5;}
+.hero-countdown{
+  font-family:var(--f-mono); font-size:12.5px; padding:6px 11px; border-radius:8px; white-space:nowrap;
+  background:rgba(255,255,255,0.1); color:var(--washi); border:1px solid rgba(255,255,255,0.18);
+}
+.hero-countdown.today{background:var(--shu); border-color:var(--shu);}
+.hero-meta{margin-top:14px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.18); font-size:13px; color:#C7D4E5; display:flex; flex-wrap:wrap; gap:14px;}
+.hero-meta b{color:var(--washi); font-weight:600;}
+.hero-nextleg{margin-top:10px; font-family:var(--f-mono); font-size:11.5px; color:#9FB3CE;}
+.hero-empty{padding:8px 2px 4px;}
+.hero-empty p{margin:8px 0 0; color:#C7D4E5; font-size:14px; max-width:38ch;}
+.hero.past{background-image:
+    linear-gradient(to right, var(--kin-soft) 2px, transparent 2px), linear-gradient(to bottom, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(to left, var(--kin-soft) 2px, transparent 2px), linear-gradient(to bottom, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(to right, var(--kin-soft) 2px, transparent 2px), linear-gradient(to top, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(to left, var(--kin-soft) 2px, transparent 2px), linear-gradient(to top, var(--kin-soft) 2px, transparent 2px),
+    linear-gradient(165deg, #5b554a 0%, #3a352c 100%);
+}
+
+/* ===================== BADGE TRASPORTO ===================== */
+.badge{
+  font-family:var(--f-mono); font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  color:#fff; padding:4px 9px; border-radius:6px; display:inline-flex; align-items:center; gap:5px; flex:none;
+}
+.badge[data-tipo="aereo"]{background:var(--sora);}
+.badge[data-tipo="shinkansen"]{background:var(--kon);}
+.badge[data-tipo="treno"]{background:var(--matcha);}
+.badge[data-tipo="bus"]{background:var(--odo);}
+.badge[data-tipo="traghetto"]{background:var(--seiji);}
+.badge[data-tipo="piedi"]{background:var(--tsuchi);}
+.badge[data-tipo="altro"]{background:var(--mist);}
+
+/* ===================== DOCUMENTI (chip biglietto) ===================== */
+.doc-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(84px,1fr)); gap:10px; margin-top:10px;}
+.doc-chip{
+  background:var(--washi-card); border:1px solid var(--line); border-radius:12px; padding:0; overflow:hidden;
+  text-align:left; position:relative; box-shadow:var(--shadow); aspect-ratio:1/1;
+}
+.doc-chip img{width:100%; height:100%; object-fit:cover; display:block;}
+.doc-chip .pdf-mark{
+  height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  color:var(--kon); font-family:var(--f-mono); font-size:10px; font-weight:700; background:var(--washi-deep);
+}
+.doc-chip .doc-label{
+  position:absolute; bottom:0; left:0; right:0; background:rgba(28,27,26,0.72); color:#fff; font-size:10px;
+  padding:4px 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:var(--f-body);
+}
+.doc-chip .del-x{
+  position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:rgba(28,27,26,0.55);
+  color:#fff; border:none; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center;
+}
+.doc-add{
+  background:var(--washi); border:1.5px dashed var(--line-strong); border-radius:12px; aspect-ratio:1/1;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; color:var(--mist);
+  font-size:11px; font-family:var(--f-mono);
+}
+.doc-add svg{width:18px; height:18px;}
+
+/* ===================== EMPTY STATES ===================== */
+.empty{
+  border:1.5px dashed var(--line-strong); border-radius:14px; padding:22px 18px; text-align:center; color:var(--mist);
+  font-size:13.5px; background:rgba(255,255,255,0.3);
+}
+.empty b{display:block; color:var(--sumi); font-family:var(--f-display); font-size:15px; margin-bottom:4px;}
+
+/* ===================== INFO BLOCK (note generali) ===================== */
+.info-block{
+  background:var(--washi-card); border:1px solid var(--line); border-radius:14px; padding:18px 20px;
+  font-size:13.5px; line-height:1.7; white-space:pre-wrap; color:var(--sumi); box-shadow:var(--shadow);
+}
+
+/* ===================== TIMELINE / TAPPE ===================== */
+.timeline{position:relative; margin-top:6px;}
+.tappa{
+  background:var(--washi-card); border-radius:16px; margin-bottom:14px; box-shadow:var(--shadow);
+  border:1px solid var(--line); position:relative;
+}
+.tappa::before, .tappa::after{
+  content:''; position:absolute; width:16px; height:16px; border-radius:50%; background:var(--washi); top:50%;
+  transform:translateY(-50%); z-index:2;
+}
+.tappa::before{left:-9px;} .tappa::after{right:-9px;}
+.tappa summary{list-style:none; cursor:pointer; padding:16px 18px; display:flex; gap:12px; align-items:center;}
+.tappa summary::-webkit-details-marker{display:none;}
+.tappa-num{
+  font-family:var(--f-display); font-size:13px; color:var(--washi); background:var(--shu); border-radius:50%;
+  width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex:none; font-weight:700;
+  border:1.5px solid #8C341E; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.5);
+}
+.tappa-info{flex:1; min-width:0;}
+.tappa-info h3{font-size:18px; color:var(--sumi);}
+.tappa-info .range{font-family:var(--f-mono); font-size:12px; color:var(--mist); margin-top:2px;}
+.tappa-chev{color:var(--mist); transition:transform .2s; flex:none;}
+.tappa[open] .tappa-chev{transform:rotate(180deg);}
+.tappa-body{padding:0 18px 18px; border-top:1px dashed var(--line);}
+.tappa-block{margin-top:16px;}
+.tappa-block .blk-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+.tappa-block .blk-head h4{font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--mist); display:flex; align-items:center; gap:7px;}
+.tappa-block .blk-head h4::before{content:''; width:12px; height:2px; background:var(--kin); flex:none; display:inline-block;}
+.alloggio-card{background:var(--washi-deep); border-radius:11px; padding:12px 14px; font-size:13.5px;}
+.alloggio-card .nome{font-weight:600; color:var(--sumi);}
+.alloggio-card .riga{color:var(--mist); margin-top:3px; font-size:12.5px;}
+.alloggio-card .riga b{color:var(--sumi); font-weight:600;}
+.citta-info{background:var(--washi-deep); border-radius:11px; padding:13px 15px;}
+.citta-info .tagline{font-style:italic; font-size:13.5px; color:var(--sumi); line-height:1.55; margin:0 0 9px;}
+.citta-info ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px;}
+.citta-info li{font-size:12.5px; color:var(--sumi); line-height:1.45; display:flex; gap:8px; align-items:baseline;}
+.citta-info li::before{content:''; width:6px; height:6px; background:var(--shu); transform:rotate(45deg); flex:none; display:inline-block;}
+.hotel-maps-btn{
+  display:inline-flex; align-items:center; gap:7px; margin-top:11px; font-weight:600; font-size:13px;
+  color:var(--washi); text-decoration:none; padding:9px 14px; background:var(--kon); border-radius:9px;
+}
+.hotel-maps-btn:active{background:var(--kon-soft);}
+
+.segmento{
+  padding:10px 0; border-bottom:1px solid var(--line);
+}
+.segmento:last-child{border-bottom:none;}
+.segmento-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.segmento-top-right{display:flex; align-items:center; gap:6px; flex:none;}
+.segmento-route{font-size:14px; font-weight:600; margin-top:7px; line-height:1.4; word-break:break-word;}
+.segmento-route .arrow{color:var(--mist); font-weight:400;}
+.segmento-meta{font-family:var(--f-mono); font-size:11px; color:var(--mist); margin-top:4px; line-height:1.5; word-break:break-word;}
+.segmento-time{font-family:var(--f-mono); font-weight:700; font-size:14px; color:var(--kon); white-space:nowrap;}
+.segmento-maps{
+  display:inline-flex; align-items:center; gap:6px; margin-top:8px; font-family:var(--f-mono); font-size:11.5px;
+  color:var(--kon); text-decoration:none; padding:6px 11px; background:var(--washi-card); border-radius:8px;
+  border:1px solid var(--line-strong);
+}
+.segmento-maps:active{background:var(--washi-deep);}
+.segmento-maps svg{flex:none;}
+
+.row-actions{display:flex; gap:14px; margin-top:4px;}
+.tappa-footer-actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+
+.giorno{
+  background:var(--washi-deep); border-left:3px solid var(--kon); border-radius:0 12px 12px 0;
+  margin-bottom:10px; overflow:hidden;
+}
+.giorno summary{list-style:none; cursor:pointer; padding:13px 15px;}
+.giorno summary::-webkit-details-marker{display:none;}
+.giorno-head{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+.giorno-heading{min-width:0;}
+.giorno-data{font-family:var(--f-mono); font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--kon);}
+.giorno-titolo{font-family:var(--f-display); font-size:15px; font-weight:700; color:var(--sumi); margin-top:2px;}
+.giorno-actions{display:flex; gap:4px; align-items:center; flex:none;}
+.giorno-chev{color:var(--mist); transition:transform .2s; display:flex; align-items:center; padding:0 2px;}
+.giorno[open] .giorno-chev{transform:rotate(180deg);}
+.giorno-body{padding:0 15px 13px;}
+.giorno-note{font-size:13px; color:var(--sumi); white-space:pre-wrap; line-height:1.6;}
+.giorno-segmenti{margin-top:10px; padding-top:8px; border-top:1px dashed var(--line-strong); background:var(--washi-card); border-radius:9px; padding:8px 10px;}
+.giorno-segmenti .segmento{padding:7px 0;}
+.tappa-note-block{background:var(--washi-deep); border-radius:11px; padding:12px 14px; font-size:13px; white-space:pre-wrap; line-height:1.6; color:var(--sumi);}
+
+/* ===================== MODAL ===================== */
+.overlay{
+  position:fixed; inset:0; background:rgba(20,18,15,0.5); display:none; align-items:flex-end; justify-content:center;
+  z-index:50; backdrop-filter:blur(2px);
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--washi); width:100%; max-width:640px; border-radius:20px 20px 0 0; max-height:88vh;
+  overflow-y:auto; padding:20px 20px calc(20px + env(safe-area-inset-bottom));
+  animation:slideUp .22s ease-out;
+}
+@media (min-width:640px){
+  .overlay{align-items:center;}
+  .modal{border-radius:18px; max-height:85vh;}
+}
+@keyframes slideUp{from{transform:translateY(24px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+.modal h3{font-size:18px; color:var(--kon); margin-bottom:14px;}
+.field{margin-bottom:13px;}
+.field label{display:block; font-size:12px; font-weight:600; color:var(--mist); margin-bottom:5px; letter-spacing:.02em;}
+.field input, .field select, .field textarea{
+  width:100%; border:1.5px solid var(--line-strong); border-radius:10px; padding:11px 12px; background:var(--washi-card);
+  color:var(--sumi);
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--kon);}
+.field-row{display:flex; gap:10px;}
+.field-row .field{flex:1; min-width:0;}
+@media (max-width:480px){
+  .field-row{flex-direction:column; gap:13px;}
+  .field-row .field input[type="datetime-local"],
+  .field-row .field input[type="date"]{width:100%;}
+}
+.modal-actions{display:flex; gap:10px; margin-top:18px;}
+.modal-actions .btn{flex:1;}
+.file-input-wrap{
+  border:1.5px dashed var(--line-strong); border-radius:11px; padding:16px; text-align:center; color:var(--mist); font-size:13px;
+}
+.file-input-wrap input{margin-top:8px;}
+
+/* ===================== LIGHTBOX ===================== */
+.lightbox{position:fixed; inset:0; background:rgba(10,9,8,0.92); display:none; align-items:center; justify-content:center; z-index:60; padding:20px;}
+.lightbox.show{display:flex;}
+.lightbox img{max-width:100%; max-height:85vh; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,0.5);}
+.lightbox-close{position:absolute; top:18px; right:18px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.12); color:#fff; border:none; font-size:18px;}
+.lightbox-caption{position:absolute; bottom:24px; left:0; right:0; text-align:center; color:#e7e2d6; font-family:var(--f-mono); font-size:12px;}
+.lightbox-loading{color:#e7e2d6; font-family:var(--f-mono); font-size:13px;}
+
+/* ===================== TOAST ===================== */
+#toast{
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--sumi); color:var(--washi);
+  padding:10px 18px; border-radius:10px; font-size:13px; opacity:0; transition:all .25s; z-index:70; pointer-events:none;
+  font-family:var(--f-mono); max-width:90vw; text-align:center;
+}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ===================== FOOTER ===================== */
+.footer{margin-top:36px; padding-top:18px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:10px; align-items:center;}
+.save-state{font-family:var(--f-mono); font-size:11px; color:var(--mist); display:flex; align-items:center; gap:6px;}
+.save-state .led{width:6px; height:6px; border-radius:50%; background:var(--matcha);}
+.save-state.err .led{background:var(--shu);}
+.footer-actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+.fab-wrap{position:sticky; bottom:14px; margin-top:18px; z-index:5;}
+</style>
+</head>
+<body>
+
+<div id="loading"><div class="spinner"></div><div>Carico l'itinerario…</div></div>
+
+<div class="wrap" id="app" style="display:none;">
+
+  <header class="appbar">
+    <span class="hanko-seal" aria-hidden="true">旅</span>
+    <div style="flex:1; min-width:0;">
+      <div class="eyebrow">diario di viaggio</div>
+      <h1 id="tripTitle">Giappone</h1>
+      <div class="dates" id="tripDates"></div>
+    </div>
+    <button class="icon-btn" onclick="openTripForm()" aria-label="Modifica viaggio">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+    </button>
+  </header>
+
+  <section id="hero" class="hero"></section>
+
+  <div class="section-head">
+    <h2>Documenti generali</h2>
+    <span class="sub">passaporto · JR Pass · assicurazione</span>
+  </div>
+  <div id="docGenerali"></div>
+
+  <div class="section-head">
+    <h2>Itinerario</h2>
+    <span class="sub" id="tappeCount"></span>
+  </div>
+  <div class="timeline" id="timeline"></div>
+
+  <button class="btn btn-primary btn-block" onclick="openTappaForm()" style="margin-top:6px;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+    Aggiungi tappa
+  </button>
+
+  <div class="footer">
+    <div class="save-state" id="saveState"><span class="led"></span><span id="saveStateText">Salvato</span></div>
+    <div class="footer-actions">
+      <button class="btn btn-ghost btn-sm" onclick="aggiornaContenuti()">Aggiorna contenuti</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportBackup()">Esporta backup</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importInput').click()">Importa backup</button>
+    </div>
+    <input type="file" id="importInput" accept="application/json" style="display:none" onchange="handleImportInput(event)">
+  </div>
+
+  <div class="section-head" style="margin-top:30px;">
+    <h2>Informazioni utili</h2>
+    <button class="icon-btn" style="width:30px;height:30px;border-radius:8px;" onclick="openNoteGeneraliForm()" aria-label="Modifica">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+    </button>
+  </div>
+  <div id="noteGenerali" style="margin-bottom:30px;"></div>
+
+</div>
+
+<div class="overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Chiudi">✕</button>
+  <div id="lightboxContent"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================================
+   STATO
+   ========================================================================= */
+const STORAGE_KEY = 'trip-data';
+const MONTHS_IT = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+const TIPI_TRASPORTO = [
+  {v:'aereo', l:'Volo'}, {v:'shinkansen', l:'Shinkansen'}, {v:'treno', l:'Treno locale'},
+  {v:'bus', l:'Bus'}, {v:'traghetto', l:'Traghetto'}, {v:'piedi', l:'A piedi'}, {v:'altro', l:'Altro'}
+];
+
+let state = buildSeedState();
+let isFirstRun = false;
+
+function buildSeedState(){
+  return {
+  trip: {
+    titolo: 'Luna di miele — Giappone',
+    dataInizio: '2026-06-26',
+    dataFine: '2026-07-09',
+    noteGenerali:
+`BAGAGLI CONSENTITI (per persona)
+- Bagaglio a mano (zaino/borsa): 40×30×15 cm
+- Trolley a mano: 55×40×23 cm, max 8 kg
+- Bagaglio in stiva: max 23 kg (somma lati max 158 cm)
+
+CONNESSIONE INTERNET
+E-SIM Holafly, 13 giorni — acquistata in Italia prima della partenza.
+All'arrivo: collegarsi al wifi gratuito dell'aeroporto e attivare la e-sim scansionando il QR ricevuto via email.
+Se non funziona: disattivare la propria SIM (es. Iliad) e attivare il roaming Holafly.
+È solo dati — per le chiamate usare WhatsApp. Conviene comunque disattivare la propria SIM per evitare addebiti imprevisti.
+
+DOGANA / VISIT JAPAN WEB
+Niente modulo da compilare in dogana: basta il QR generato su Visit Japan Web (Luca lo invia anche su WhatsApp).
+https://www.vjw.digital.go.jp/main/#/vjwplo001
+Login: rocco.scotellaro93@gmail.com
+Da qui si genera anche il QR per gli acquisti Free Tax. In alternativa, in cassa basta il passaporto.
+
+CARTA SUICA
+Tessera ricaricabile per metro e treni regionali a Tokyo, Kyoto, Osaka. Da fare una a testa, all'aeroporto di Haneda è comoda da acquistare. Si ricarica solo in contanti (yen) alle macchinette in stazione o nei minimarket (7-Eleven, Lawson, FamilyMart). Su iPhone si può aggiungere al Wallet e ricaricare con Apple Pay (Wallet → + → Tessera trasporti → Suica).
+Icoca e Pasmo sono tessere equivalenti, intercambiabili.
+
+JAPAN RAIL PASS (7 giorni)
+Treni regionali JR e Shinkansen illimitati. Scambiare il voucher con il pass fisico (un talloncino di cartone — conservarlo con cura, serve ai tornelli) all'ufficio JR di Kansai Airport il 27/06, indicando il 29/06 come data di attivazione: servono i passaporti di entrambi.
+Prenotazione Shinkansen gratuita in qualsiasi ufficio JR — conviene farla con un po' di anticipo.
+App utile per orari/binari: Japan Travel (filtro "Japan Rail Pass" per nascondere i treni non coperti).
+
+CONTANTI E ATM
+Prelievi negli ATM dei 7-Eleven (si può selezionare l'inglese). In aeroporto il cambio è più alto: meglio prelevare/cambiare poco lì e il resto in città.
+
+QUALCHE REGOLA UTILE
+- In Giappone il "piano terra" è il 1° piano
+- Fila ordinata per il treno: si scende prima, si sale dopo
+- Non si mangia, beve o si parla al telefono sui treni
+- Posti riservati ad anziani, disabili e donne incinte
+- Treni regionali: circa dalle 5:00 a mezzanotte/00:30
+- Trolley in ryokan: si solleva, non si striscia su tatami/futon
+- Negozi Free Tax solo per turisti: sconto in cassa con passaporto (o QR doganale)
+
+FRASI BASE
+Ciao — konnichiwa
+Arrivederci — sayonara
+Sì / No — hai / ie
+Per favore — kudasai
+Prego (quando offri) — dōzo
+Grazie — arigato
+Scusi (per richiamare attenzione) — sumimasen
+
+AGENZIA — ORMAS VIAGGI
+Luca · +39 0883 531041 · luca@ormasviaggi.it`
+  },
+  documentiGenerali: [],
+  tappe: [
+    {
+      id:'t-osaka', citta:'Osaka', dataArrivo:'2026-06-27', dataPartenza:'2026-06-29',
+      cittaInfo:{
+        tagline:'La capitale del cibo di strada e della vita notturna del Kansai — meno legata alle tradizioni di Kyoto, più diretta e vivace.',
+        fatti:'Popolazione: circa 2,7 milioni (area metropolitana ~19 milioni)\nFamosa per: okonomiyaki, takoyaki, le insegne al neon di Dotonbori\nSoprannome: "la cucina del Giappone" (tenka no daidokoro)'
+      },
+      alloggio:{ nome:'Sotetsu Grand Fresa Osaka-Namba', indirizzo:'800m a nord della stazione Nankai Namba', checkIn:'15:00–23:30', checkOut:'11:00', note:'Standard double, colazione incl.' },
+      note:'',
+      giorni:[
+        {id:'g0', data:'2026-06-26', titolo:'Partenza dall\'Italia',
+          note:'Si parte! Bari → Monaco → Kansai (vedi trasporti). Il secondo volo è lungo e arriva in Giappone solo la mattina del 27, ora locale — con il cambio di fuso si "perde" una notte.'},
+        {id:'g1', data:'2026-06-27', titolo:'Arrivo · Castello di Osaka, Dotonbori',
+          note:'Lasciate le valigie in hotel e iniziate a girare. Castello di Osaka: metro Nagahoritsurumiryokuchi Line, da Nagahoribashi a Morinomiya (biglietto d\'ingresso meglio prenderlo online in anticipo per saltare la coda). Poi Dotonbori per la sera: ponte Ebisu-Bashi, insegna Glico, Kani Doraku, Tempio Hozenji, vicolo Hozenji Yokocho.\n\nAll\'ufficio JR di Kansai Airport scambiate il voucher Japan Rail Pass con il pass fisico, indicando il 29/06 come data di attivazione (servono i passaporti di entrambi).'},
+        {id:'g2', data:'2026-06-28', titolo:'Messa a Umeda · Universal Studios',
+          note:'Domenica. Messa alla Catholic Osaka Umeda Church, 350m da Nakatsu Station (7:00 giapponese, 9:00 inglese).\n\nUniversal Studios Japan: da Osaka Station, Osaka Loop Line fino a Nishikujo, poi JR Yumesaki Line fino a Universal-City Station. Biglietti già stampati, c\'è anche un\'app per le attrazioni a tempo.'}
+      ],
+      segmenti:[
+        {id:'s1', tipo:'aereo', origine:'Bari (BRI)', destinazione:'Monaco (MUC)', partenza:'2026-06-26T06:00', arrivo:'2026-06-26T07:45', numero:'Lufthansa EN7431', posto:'', note:'Durata 1h45'},
+        {id:'s2', tipo:'aereo', origine:'Monaco (MUC)', destinazione:'Kansai (KIX)', partenza:'2026-06-26T12:25', arrivo:'2026-06-27T07:15', numero:'Lufthansa NH742', posto:'', note:'Durata 11h50 — arrivo il giorno dopo (ora locale Giappone)'},
+        {id:'s3', tipo:'treno', origine:'Kansai Airport', destinazione:'Osaka Namba (Nankai)', partenza:'2026-06-27T08:30', arrivo:'', numero:'Nankai Rail', posto:'', note:'Orario indicativo — controlla il biglietto via email, va prenotato online. Stazione Nankai proprio davanti aeroporto.'},
+        {id:'s3b', tipo:'piedi', origine:'Osaka Namba (Nankai)', destinazione:'Sotetsu Grand Fresa Osaka-Namba', partenza:'2026-06-27T09:15', arrivo:'', numero:'', posto:'', note:'Circa 800m, 10 minuti — orario indicativo.'},
+        {id:'s3c', tipo:'piedi', origine:'Morinomiya Station', destinazione:'Castello di Osaka', partenza:'2026-06-27T11:00', arrivo:'', numero:'', posto:'', note:'Passeggiata tra i giardini fino al castello — orario indicativo.'},
+        {id:'s3d', tipo:'piedi', origine:'Shinsaibashi Station', destinazione:'Dotonbori', partenza:'2026-06-27T18:00', arrivo:'', numero:'', posto:'', note:'Si scende a Shinsaibashi e si procede a sud a piedi verso il Dotonbori — orario indicativo.'},
+        {id:'s3e', tipo:'piedi', origine:'Nakatsu Station', destinazione:'Catholic Osaka Umeda Church', partenza:'2026-06-28T08:45', arrivo:'', numero:'', posto:'', note:'Circa 350m. Messa alle 7:00 in giapponese o alle 9:00 in inglese — orario calcolato per quella delle 9:00.'},
+        {id:'s3f', tipo:'piedi', origine:'Universal-City Station', destinazione:'Universal Studios Japan', partenza:'2026-06-28T11:00', arrivo:'', numero:'', posto:'', note:'5-7 minuti lungo Universal Citywalk. Prima: Osaka Station → Nishikujo (Osaka Loop Line) → Universal-City (JR Yumesaki Line), circa 30 minuti totali. Orario indicativo.'}
+      ],
+      documenti:[]
+    },
+    {
+      id:'t-kyoto', citta:'Kyoto', dataArrivo:'2026-06-29', dataPartenza:'2026-07-03',
+      cittaInfo:{
+        tagline:'Capitale imperiale per oltre 1000 anni (794-1868), oggi cuore spirituale e culturale del Giappone.',
+        fatti:'Oltre 1.600 templi buddisti e 400 santuari shintoisti\n17 monumenti Patrimonio UNESCO (16 templi/santuari + il Castello Nijo)\nScampata ai bombardamenti della Seconda Guerra Mondiale — bomba atomica inclusa'
+      },
+      alloggio:{ nome:'Sotetsu Fresa Inn Kyoto Hachijoguchi', indirizzo:'300m a sud della stazione di Kyoto', checkIn:'15:00–23:30', checkOut:'11:00', note:'Twin room, colazione incl.' },
+      note:'',
+      giorni:[
+        {id:'g3', data:'2026-06-29', titolo:'Nara e Fushimi Inari',
+          note:'Conviene spedire il bagaglio grande dall\'hotel di Osaka direttamente a quello di Kyoto (tramite la reception).\n\nA Nara: parco dei cervi, Todai-ji (grande Buddha in legno), Kasuga Taisha. Consigliato partire da Nara dopo le 14:00.\n\nA Fushimi Inari: 10-15 min a piedi dalla stazione per il bivio dei torii rossi (il pezzo più fotogenico); in cima ~1h30, in discesa ~50min.\n\nDa qui parte il Japan Rail Pass: 7 giorni, attivo dal 29/06 al 05/07.'},
+        {id:'g4', data:'2026-06-30', titolo:'Kinkaku-ji, Higashiyama, Gion',
+          note:'Kinkaku-ji (tempio d\'oro, bus 205 da Kitaoji) e magari Ryoanji (giardino di roccia).\n\nPoi Higashiyama: Kiyomizudera (Unesco), le stradine Ninnenzaka/Sannenzaka, Kenninji Temple, Kodai-ji, Nishiki Market, Gion (verso le 19:30 si vedono spesso le Geishe vicino al ponte).'},
+        {id:'g5', data:'2026-07-01', titolo:'Arashiyama · Tea Ceremony',
+          note:'Foresta di bambù di Arashiyama (JR Sagano Line da Kyoto Station, ~20 min). Volendo, tappa a Daruma-dera (Horin-ji) scendendo a Emmachi Station.\n\nAlle 16:00: Tea Ceremony in kimono (vedi trasporti per indirizzo e percorso).'},
+        {id:'g6', data:'2026-07-02', titolo:'Hiroshima e Miyajima',
+          note:'Giornata a Hiroshima e Miyajima (vedi trasporti per gli Shinkansen).\n\nDa Hiroshima Station: tram linea 2 o 6 per la Cupola della Bomba Atomica (fermata Genbaku Dome-Mae).\n\nPoi JR Sanyo Line per Miyajimaguchi (~25 min, incluso nel Pass) e ferry JR per l\'isola (~10 min, incluso nel Pass): Santuario di Itsukushima col torii rosso, funivia per il Monte Misen.\n\nAl ritorno, si può valutare una sosta a Kobe per cena o al Castello di Himeji.'}
+      ],
+      segmenti:[
+        {id:'s4', tipo:'treno', origine:'Osaka (JR Namba)', destinazione:'Nara', partenza:'2026-06-29T08:11', arrivo:'2026-06-29T08:55', numero:'Kansai Line', posto:'', note:'Regionale, non occorre prenotare. Alternative: 08:36→09:18 oppure 08:52→09:34.'},
+        {id:'s4b', tipo:'piedi', origine:'Nara Station', destinazione:'Parco di Nara (Todai-ji)', partenza:'2026-06-29T09:00', arrivo:'', numero:'', posto:'', note:'Circa 30 minuti a piedi (c\'è anche il bus, se preferite).'},
+        {id:'s5', tipo:'treno', origine:'Nara', destinazione:'Kyoto (via Fushimi Inari)', partenza:'2026-06-29T14:00', arrivo:'', numero:'JR Nara Line', posto:'', note:'Consigliato partire da Nara dopo le 14:00. Si scende a Inari Station per la visita ai torii, poi si riparte per Kyoto Station (8 min). Regionale, non occorre prenotare.'},
+        {id:'s5b', tipo:'piedi', origine:'Kyoto Station', destinazione:'Sotetsu Fresa Inn Kyoto Hachijoguchi', partenza:'2026-06-29T16:00', arrivo:'', numero:'', posto:'', note:'Circa 300m, 5 minuti — orario indicativo, dipende da quanto vi fermate a Fushimi Inari.'},
+        {id:'s5c', tipo:'piedi', origine:'Inari Station', destinazione:'Fushimi Inari (bivio dei torii)', partenza:'2026-06-29T14:45', arrivo:'', numero:'', posto:'', note:'10-15 minuti a piedi per arrivare al bivio più fotogenico. Da lì, volendo, 1h30 in salita + 50 min in discesa per tutto il percorso.'},
+        {id:'s6', tipo:'altro', origine:'', destinazione:'Tea Ceremony — Kimono MAIKOYA Nishiki', partenza:'2026-07-01T16:00', arrivo:'', numero:'', posto:'', note:'329 Ebiyacho, Gokomachidori Sanjo sagaru, Nakagyo Ward, Kyoto. Da Kyoto Station: Karasuma Line → Karasuma Oike Station, poi 1km a piedi. maps.app.goo.gl/9ujMi8abAPoMYfJR6'},
+        {id:'s6b', tipo:'piedi', origine:'Saga-Arashiyama Station', destinazione:'Arashiyama Bamboo Forest', partenza:'2026-07-01T09:30', arrivo:'', numero:'', posto:'', note:'Si procede a piedi oltre la ferrovia, pochi minuti.'},
+        {id:'s6c', tipo:'piedi', origine:'Kiyomizu-michi (fermata bus)', destinazione:'Kiyomizu-dera', partenza:'2026-06-30T14:30', arrivo:'', numero:'', posto:'', note:'In salita. Al ritorno si scende invece per Ninnenzaka e Sannenzaka, le stradine tradizionali per souvenir e foto.'},
+        {id:'s7', tipo:'shinkansen', origine:'Kyoto', destinazione:'Hiroshima', partenza:'2026-07-02T07:20', arrivo:'2026-07-02T09:04', numero:'Hikari 731', posto:'', note:'Da prenotare in un ufficio JR. Alternativa: Hikari 733, 08:01→09:56.'},
+        {id:'s7b', tipo:'piedi', origine:'Miyajima (porto traghetto)', destinazione:'Santuario di Itsukushima', partenza:'2026-07-02T13:30', arrivo:'', numero:'', posto:'', note:'Una decina di minuti, passando per la via principale Omotesando (negozi e ristoranti). Orario indicativo.'},
+        {id:'s8', tipo:'shinkansen', origine:'Hiroshima', destinazione:'Shin-Osaka', partenza:'2026-07-02T17:33', arrivo:'2026-07-02T18:59', numero:'Sakura 762', posto:'', note:'Alternativa: Sakura 766, 18:33→19:59.'},
+        {id:'s9', tipo:'shinkansen', origine:'Shin-Osaka', destinazione:'Kyoto', partenza:'2026-07-02T19:21', arrivo:'2026-07-02T19:34', numero:'Hikari 664', posto:'', note:'Alternativa: Hikari 666, 20:21→20:34.'}
+      ],
+      documenti:[]
+    },
+    {
+      id:'t-takayama', citta:'Takayama', dataArrivo:'2026-07-03', dataPartenza:'2026-07-04',
+      cittaInfo:{
+        tagline:'Cittadina nelle Alpi giapponesi, tra le meglio conservate del periodo Edo.',
+        fatti:'Regione di Hida, Prefettura di Gifu\nFamosa per: case in legno, artigianato, sakè locale, i festival Takayama Matsuri'
+      },
+      alloggio:{ nome:'Fav Lux HidaTakayama', indirizzo:'350m dalla stazione di Takayama', checkIn:'15:00–00:00', checkOut:'10:00', note:'Tatami room, colazione incl.' },
+      note:'',
+      giorni:[
+        {id:'g7', data:'2026-07-03', titolo:'Arrivo · Villaggio Hida',
+          note:'Conviene spedire il bagaglio grande dall\'hotel di Kyoto direttamente a quello di Tokyo.\n\nCheck-in alle 15: si possono lasciare i bagagli e andare subito al Villaggio Hida (case rurali tradizionali, dimostrazioni artigianali) — Sarubobo Bus dal terminal vicino la stazione, 10 min, 100 yen (oppure regionale JR Hida diretto).\n\nAl ritorno: vecchia Takayama, distillerie di sakè, Takayama Jinya, Yatai Kaikan.'},
+        {id:'g8', data:'2026-07-04', titolo:'Mercato Miyagawa · partenza',
+          note:'Prima del bus delle 8:10: mercato Miyagawa lungo il fiume, aperto dalle 7:00.'}
+      ],
+      segmenti:[
+        {id:'s10', tipo:'treno', origine:'Kyoto', destinazione:'Takayama', partenza:'2026-07-03T08:31', arrivo:'2026-07-03T12:14', numero:'Hida 25 (diretto)', posto:'', note:'Limited express JR (non Shinkansen) — da prenotare in anticipo, è il solo treno diretto. Alternativa con cambio a Nagoya: Hikari 638 (07:33, Shinkansen) + Hida 3 (08:43→10:58), circa 3h25 totali.'},
+        {id:'s10b', tipo:'piedi', origine:'Takayama Station', destinazione:'Fav Lux HidaTakayama', partenza:'2026-07-03T12:20', arrivo:'', numero:'', posto:'', note:'Circa 350m, 5 minuti.'}
+      ],
+      documenti:[]
+    },
+    {
+      id:'t-kanazawa', citta:'Kanazawa', dataArrivo:'2026-07-04', dataPartenza:'2026-07-05',
+      cittaInfo:{
+        tagline:'Una delle poche città scampate ai bombardamenti della Seconda Guerra Mondiale: il centro storico feudale è intatto.',
+        fatti:'Il nome significa "palude d\'oro" — qui si produce il 99% della foglia d\'oro (kinpaku) del Giappone\nIl Giardino Kenroku-en è considerato uno dei tre più belli del Giappone\nRegione di Hokuriku, Prefettura di Ishikawa'
+      },
+      alloggio:{ nome:'Tokyu Stay Kanazawa', indirizzo:'1,5km dalla stazione di Kanazawa', checkIn:'15:00–00:00', checkOut:'11:00', note:'Residential Twin room, colazione incl.' },
+      note:'',
+      giorni:[
+        {id:'g9', data:'2026-07-04', titolo:'Kenroku-en, Castello, Higashi Chaya',
+          note:'Da vedere: Giardino Kenroku-en, Castello di Kanazawa, quartiere delle case da tè Higashi Chaya, quartiere dei samurai Naga-machi.'},
+        {id:'g10', data:'2026-07-05', titolo:'Messa · partenza per Tokyo',
+          note:'Domenica. Messa alle 8:30 alla Kanazawa Catholic Church, 750m a sud dell\'hotel — poi si riparte per Tokyo.'}
+      ],
+      segmenti:[
+        {id:'s11', tipo:'bus', origine:'Takayama (Nohi Bus Center)', destinazione:'Shirakawa-Go Ogimachi', partenza:'2026-07-04T08:10', arrivo:'2026-07-04T09:00', numero:'Nohi Bus', posto:'', note:'Villaggio Unesco, tetti di paglia. Si sale direttamente con il ticket.'},
+        {id:'s12', tipo:'bus', origine:'Shirakawa-Go Ogimachi', destinazione:'Kanazawa (uscita Ovest, stop 4)', partenza:'2026-07-04T12:20', arrivo:'2026-07-04T13:35', numero:'Nohi Bus', posto:'', note:''},
+        {id:'s12b', tipo:'piedi', origine:'Kanazawa Station', destinazione:'Tokyu Stay Kanazawa', partenza:'2026-07-04T13:45', arrivo:'', numero:'', posto:'', note:'Circa 1,5km, 20 minuti a piedi (oppure bus/taxi se preferite).'},
+        {id:'s12c', tipo:'piedi', origine:'Tokyu Stay Kanazawa', destinazione:'Kanazawa Catholic Church', partenza:'2026-07-05T08:15', arrivo:'', numero:'', posto:'', note:'Circa 750m a sud dell\'hotel — messa alle 8:30.'}
+      ],
+      documenti:[]
+    },
+    {
+      id:'t-tokyo', citta:'Tokyo', dataArrivo:'2026-07-05', dataPartenza:'2026-07-09',
+      cittaInfo:{
+        tagline:'La capitale, una delle aree metropolitane più popolose del mondo: iper-modernità e tradizione fianco a fianco.',
+        fatti:'Popolazione: circa 14 milioni (oltre 37 milioni nell\'area metropolitana)\nFino al 1868 si chiamava Edo\nFamosa per: Shibuya, Akihabara, Asakusa, il Palazzo Imperiale'
+      },
+      alloggio:{ nome:'Rose Garden Shinjuku', indirizzo:'110m a piedi da Nishi-Shinjuku Station', checkIn:'13:00–00:00', checkOut:'11:00', note:'Comfort twin, non smoking, colazione incl.' },
+      note:'Gli Shinkansen arrivano a Tokyo Station. Con il JR Pass attivo (5 luglio, ultimo giorno) si può girare gratis sulla Yamanote Line — le metropolitane invece sono sempre a pagamento.',
+      giorni:[
+        {id:'g11', data:'2026-07-05', titolo:'Santuario Meiji, Harajuku, Shibuya',
+          note:'Dall\'hotel: Tochomae Station E28 (600m), Oedo Line, 2 fermate fino a Yoyogi Station E26. A piedi verso il parco Meiji (circa 500m), poi il Santuario Meiji — dedicato all\'imperatore Meiji, da non perdere il museo Meiji Jingu e il giardino interno.\n\nA sud: Harajuku (quartiere della moda giovanile) e Takeshita Street, poi il viale Omotesando per shopping e souvenir.\n\nA piedi (15 min) fino a Shibuya: Center Gai, il celebre incrocio (bella foto dal 2° piano dello Starbucks), la statua del cane Hachiko, lo Shibuya Sky Observatory. Per cena, Uobei Genkozushi per sushi economico a rullo è un\'opzione.\n\nRitorno in hotel con la Yamanote Line. Se non siete stanchi: zona est di Shinjuku, il gatto 3D sul Cross Shinjuku Building, il Godzilla Head, Kabukicho (tranquillo da visitare anche in famiglia).'},
+        {id:'g12', data:'2026-07-06', titolo:'Palazzo Imperiale, Asakusa, Odaiba',
+          note:'Da Nishi-Shinjuku Station: Marunouchi Line diretta a Tokyo Station. Da lì, 700m a piedi ai Giardini del Palazzo Imperiale — cercate il Ponte Nijubashi sul fossato.\n\nA piedi/Ginza Line da Kyobashi fino ad Asakusa Sta.: Kaminari Mon (il portale), la via Nakamise Dori, il tempio Sensoji (incenso purificatore). Vista dall\'alto del Tourism Information Center, Melonpan da Kagetsudo lì vicino. Se c\'è tempo: birra al 23° piano dell\'Asahi Beer Hall, oppure il Tokyo Skytree (Asakusa Line → Oshiage).\n\nDa qui il molo Tokyo Cruise porta direttamente a Odaiba in battello. Alternativa via metro: Asakusa Line (Asakusa→Shinbashi) poi Yurikamome (Shinbashi→Daiba). A Odaiba: il Gundam gigante (a 600m dalla stazione, presente fino a fine agosto).\n\nRitorno: Yurikamome fino a Shiodome (grattacieli, tra cui quello della Dentsu), poi Oedo Line fino a Shinjuku. Volendo, salita gratuita all\'ultimo piano del Tokyo Metropolitan Government Building per la vista sulla città (controllate gli orari).'},
+        {id:'g13', data:'2026-07-07', titolo:'Disney Tokyo',
+          note:'Da Tokyo Station: Keiyo Line fino a Maihama Station (16 min). Da lì verso la Resort Gateway Station e monorotaia Disney Resort Line fino a Tokyo Disneysea Station. Parco aperto dalle 9:00 alle 21:00. Ticket incluso nel pacchetto.'},
+        {id:'g14', data:'2026-07-08', titolo:'Ueno, Akihabara, Ginza',
+          note:'Oedo Line: Tochomae Sta. → Ueno-Okachimachi. A Ueno: il Parco, il tempio Kiyomizu Kannon-do, lo stagno Shinobazu col tempio Bentendo (fiori di loto), poi il mercato di Ameyoko (di tutto, ottimo per tè verde e alghe). Si può pranzare da Sushi Zanmai lì vicino.\n\nYamanote Line fino ad Akihabara: Yodobashi Camera (il negozio di elettronica più grande del Giappone), poi i negozi di manga/anime/action figure. Per una pausa diversa, l\'@home cafe (maid café, un po\' di inglese parlato).\n\nYamanote Line fino a Ginza: De Beers, Mikimoto, il Tokyo International Forum, il teatro Kabuki-za. Vicino alla Shimbashi Station, ai piedi del palazzo Nippon Television, l\'orologio dello Studio Ghibli si anima alle 10, 12, 15, 18, 20 (e alle 22 nel weekend) — gratis.\n\nPer il rientro di domani: Limousine Bus da Shinjuku a Haneda alle 6:00 (vedi trasporti).'},
+        {id:'g15', data:'2026-07-09', titolo:'Partenza per l\'Italia',
+          note:'Limousine Bus dall\'hotel a Haneda (vedi trasporti), poi i due voli di rientro. Si torna a casa!'}
+      ],
+      segmenti:[
+        {id:'s13', tipo:'shinkansen', origine:'Kanazawa', destinazione:'Tokyo', partenza:'2026-07-05T10:58', arrivo:'2026-07-05T13:58', numero:'Hakutaka 560', posto:'', note:'Arrivo a Tokyo Station. Da lì Marunouchi Line fino a Nishi-Shinjuku Station per l\'hotel.'},
+        {id:'s13b', tipo:'piedi', origine:'Nishi-Shinjuku Station', destinazione:'Rose Garden Shinjuku', partenza:'2026-07-05T14:30', arrivo:'', numero:'', posto:'', note:'Circa 110m — orario indicativo.'},
+        {id:'s13c', tipo:'piedi', origine:'Yoyogi Station', destinazione:'Santuario Meiji', partenza:'2026-07-05T16:00', arrivo:'', numero:'', posto:'', note:'Circa 500m attraverso il parco Meiji — orario indicativo.'},
+        {id:'s13d', tipo:'piedi', origine:'Omotesando', destinazione:'Shibuya (Center Gai)', partenza:'2026-07-05T18:00', arrivo:'', numero:'', posto:'', note:'Circa 15 minuti a piedi — orario indicativo.'},
+        {id:'s12d', tipo:'piedi', origine:'Tokyo Station', destinazione:'Giardini del Palazzo Imperiale', partenza:'2026-07-06T09:00', arrivo:'', numero:'', posto:'', note:'Circa 700m, Ponte Nijubashi — orario indicativo.'},
+        {id:'s12e', tipo:'traghetto', origine:'Asakusa (Tokyo Cruise)', destinazione:'Odaiba', partenza:'2026-07-06T14:00', arrivo:'', numero:'Battello futuristico', posto:'', note:'Collegamento diretto in barca. Alternativa: Asakusa Line (→Shinbashi) + Yurikamome (→Daiba). Orario indicativo.'},
+        {id:'s13e', tipo:'treno', origine:'Tokyo Station', destinazione:'Maihama Station', partenza:'2026-07-07T09:00', arrivo:'', numero:'Keiyo Line', posto:'', note:'16 minuti. Poi Resort Gateway Station → Disney Resort Line → Tokyo Disneysea Station. Orario indicativo.'},
+        {id:'s16', tipo:'bus', origine:'Shinjuku Expressway Bus Terminal', destinazione:'Haneda Airport Terminal 3', partenza:'2026-07-09T06:00', arrivo:'2026-07-09T06:40', numero:'Limousine Bus', posto:'', note:'Incluso nel pacchetto.'},
+        {id:'s14', tipo:'aereo', origine:'Tokyo Haneda (HND)', destinazione:'Monaco (MUC)', partenza:'2026-07-09T09:25', arrivo:'2026-07-09T16:45', numero:'Lufthansa LH715', posto:'', note:'Durata 14h20.'},
+        {id:'s15', tipo:'aereo', origine:'Monaco (MUC)', destinazione:'Bari (BRI)', partenza:'2026-07-09T21:45', arrivo:'2026-07-09T23:25', numero:'Lufthansa LH1900', posto:'', note:'Durata 1h40'}
+      ],
+      documenti:[]
+    }
+  ]
+  };
+}
+let storageOk = true;
+
+/* =========================================================================
+   STORAGE — polyfill IndexedDB con la stessa interfaccia di window.storage
+   (get/set/delete/list, async). Funziona in qualsiasi browser reale,
+   capacità molto più ampia di localStorage (utile per foto e PDF).
+   ========================================================================= */
+const IDB_NAME = 'viaggio-giappone-db';
+const IDB_STORE = 'kv';
+let _idbPromise = null;
+function idbOpen(){
+  if (_idbPromise) return _idbPromise;
+  _idbPromise = new Promise((resolve, reject)=>{
+    if (!window.indexedDB){ reject(new Error('IndexedDB non disponibile')); return; }
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = () => { req.result.createObjectStore(IDB_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return _idbPromise;
+}
+window.storage = {
+  async get(key){
+    const db = await idbOpen();
+    return new Promise((resolve, reject)=>{
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const req = tx.objectStore(IDB_STORE).get(key);
+      req.onsuccess = () => {
+        if (req.result === undefined) reject(new Error('not found'));
+        else resolve({ key, value: req.result, shared:false });
+      };
+      req.onerror = () => reject(req.error);
+    });
+  },
+  async set(key, value){
+    const db = await idbOpen();
+    return new Promise((resolve, reject)=>{
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).put(value, key);
+      tx.oncomplete = () => resolve({ key, value, shared:false });
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+  async delete(key){
+    const db = await idbOpen();
+    return new Promise((resolve, reject)=>{
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).delete(key);
+      tx.oncomplete = () => resolve({ key, deleted:true, shared:false });
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+  async list(prefix){
+    const db = await idbOpen();
+    return new Promise((resolve, reject)=>{
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const req = tx.objectStore(IDB_STORE).getAllKeys();
+      req.onsuccess = () => {
+        let keys = req.result;
+        if (prefix) keys = keys.filter(k => String(k).startsWith(prefix));
+        resolve({ keys, shared:false });
+      };
+      req.onerror = () => reject(req.error);
+    });
+  }
+};
+
+/* =========================================================================
+   STORAGE HELPERS
+   ========================================================================= */
+async function storageGetRaw(key){
+  try{
+    const r = await window.storage.get(key, false);
+    return r ? r.value : null;
+  }catch(e){ return null; }
+}
+async function storageSetRaw(key, value){
+  try{
+    const r = await window.storage.set(key, value, false);
+    return !!r;
+  }catch(e){ return false; }
+}
+async function storageDeleteRaw(key){
+  try{ await window.storage.delete(key, false); }catch(e){}
+}
+
+async function loadState(){
+  const raw = await storageGetRaw(STORAGE_KEY);
+  if (raw){
+    try{ state = JSON.parse(raw); }catch(e){ /* dati corrotti, mantieni il seed di default */ }
+  } else {
+    isFirstRun = true; // niente in storage: prima apertura, usiamo l'itinerario precaricato
+  }
+}
+
+let saveTimer = null;
+async function saveState(){
+  setSaveIndicator('saving');
+  const ok = await storageSetRaw(STORAGE_KEY, JSON.stringify(state));
+  setSaveIndicator(ok ? 'ok' : 'err');
+}
+function setSaveIndicator(mode){
+  const el = document.getElementById('saveState');
+  const txt = document.getElementById('saveStateText');
+  if (!el) return;
+  el.classList.remove('err');
+  if (mode==='saving'){ txt.textContent = 'Salvataggio…'; }
+  else if (mode==='ok'){ txt.textContent = 'Salvato su questo dispositivo'; }
+  else { el.classList.add('err'); txt.textContent = 'Errore nel salvataggio — riprova'; }
+}
+
+async function saveDocBlob(id, base64){ return await storageSetRaw('doc:'+id, base64); }
+async function loadDocBlob(id){ return await storageGetRaw('doc:'+id); }
+async function deleteDocBlob(id){ await storageDeleteRaw('doc:'+id); }
+
+/* =========================================================================
+   UTILS
+   ========================================================================= */
+function genId(){
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'id-'+Date.now()+'-'+Math.random().toString(36).slice(2,9);
+}
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function fmtData(yyyyMmDd){
+  if (!yyyyMmDd) return '';
+  const [y,m,d] = yyyyMmDd.split('-');
+  return `${parseInt(d,10)} ${MONTHS_IT[parseInt(m,10)-1]} ${y}`;
+}
+function fmtDataBreve(yyyyMmDd){
+  if (!yyyyMmDd) return '';
+  const [y,m,d] = yyyyMmDd.split('-');
+  return `${parseInt(d,10)} ${MONTHS_IT[parseInt(m,10)-1]}`;
+}
+const WEEKDAYS_IT = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+function fmtWeekday(yyyyMmDd){
+  if (!yyyyMmDd) return '';
+  const d = new Date(yyyyMmDd+'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  return WEEKDAYS_IT[d.getDay()];
+}
+function splitDateTime(dt){
+  if (!dt) return {data:'', ora:''};
+  const [data, ora] = dt.split('T');
+  return {data, ora: ora||''};
+}
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+function tipoLabel(v){ return (TIPI_TRASPORTO.find(t=>t.v===v)||{l:v}).l; }
+
+function mapsLinkFor(s){
+  if (s.tipo === 'aereo') return null; // una rotta aerea non ha senso su una mappa stradale/transit
+  const o = (s.origine||'').trim();
+  const d = (s.destinazione||'').trim();
+  const mode = s.tipo === 'piedi' ? 'walking' : 'transit';
+  if (o && d){
+    return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(o)}&destination=${encodeURIComponent(d)}&travelmode=${mode}`;
+  }
+  if (d){
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d)}`;
+  }
+  return null;
+}
+
+/* =========================================================================
+   GESTIONE FILE (immagini / pdf) — ridimensionamento lato client
+   ========================================================================= */
+function readAsDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = e=>resolve(e.target.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+function resizeImageFile(file, maxDim, quality){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = e=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let {width,height} = img;
+        if (width>maxDim || height>maxDim){
+          if (width>height){ height = Math.round(height*maxDim/width); width = maxDim; }
+          else { width = Math.round(width*maxDim/height); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img,0,0,width,height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+async function processFileForUpload(file){
+  const isPdf = file.type === 'application/pdf';
+  let full, thumb = null;
+  if (isPdf){
+    full = await readAsDataURL(file);
+  } else {
+    full = await resizeImageFile(file, 1800, 0.82);
+    if (full.length > 4600000){
+      full = await resizeImageFile(file, 1300, 0.68);
+    }
+    thumb = await resizeImageFile(file, 220, 0.55);
+  }
+  if (full.length > 4800000){
+    throw new Error('toolarge');
+  }
+  return { full, thumb, isPdf, mimeType:file.type, nomeFile:file.name };
+}
+
+/* =========================================================================
+   RICERCA PROSSIMO EVENTO (per il tabellone)
+   ========================================================================= */
+function getNextEvent(){
+  const events = [];
+  state.tappe.forEach(t=>{
+    if (t.dataArrivo) events.push({when:new Date(t.dataArrivo+'T00:00:00'), kind:'arrivo', tappa:t});
+    (t.segmenti||[]).forEach(s=>{
+      if (s.partenza) events.push({when:new Date(s.partenza), kind:'segmento', tappa:t, segmento:s});
+    });
+  });
+  events.sort((a,b)=>a.when-b.when);
+  const now = new Date();
+  const upcoming = events.filter(e=>e.when >= now);
+  if (upcoming.length){
+    const idx = events.indexOf(upcoming[0]);
+    return {evt:upcoming[0], isPast:false, after:events[idx+1]||null};
+  }
+  if (events.length) return {evt:events[events.length-1], isPast:true, after:null};
+  return null;
+}
+
+/* =========================================================================
+   RENDER
+   ========================================================================= */
+function render(){
+  renderHeader();
+  renderHero();
+  renderNoteGenerali();
+  renderDocGenerali();
+  renderTimeline();
+}
+
+function renderNoteGenerali(){
+  const wrap = document.getElementById('noteGenerali');
+  const txt = (state.trip.noteGenerali || '').trim();
+  if (!txt){
+    wrap.innerHTML = `<div class="empty"><b>Nessuna nota ancora</b>Numero dell'agenzia, password Wi-Fi, frasi utili, info su SUICA o JR Pass: scrivi qui tutto quello che ti serve sotto mano.</div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="info-block">${esc(txt)}</div>`;
+}
+
+function renderHeader(){
+  document.getElementById('tripTitle').textContent = state.trip.titolo || 'Giappone';
+  const {dataInizio, dataFine} = state.trip;
+  let txt = '';
+  if (dataInizio && dataFine) txt = `${fmtDataBreve(dataInizio)} — ${fmtData(dataFine)}`;
+  else if (dataInizio) txt = `Dal ${fmtData(dataInizio)}`;
+  document.getElementById('tripDates').textContent = txt;
+}
+
+function renderHero(){
+  const hero = document.getElementById('hero');
+  const next = getNextEvent();
+  hero.classList.toggle('past', !!(next && next.isPast));
+
+  if (!next){
+    hero.innerHTML = `
+      <div class="hero-empty">
+        <div class="hero-label"><span class="dot"></span>Tabellone partenze</div>
+        <p>Qui apparirà il conto alla rovescia per la tua prossima tappa o trasporto, appena ne aggiungi uno.</p>
+      </div>`;
+    return;
+  }
+
+  const {evt, isPast, after} = next;
+  const now = new Date();
+  const diffMs = evt.when - now;
+  const diffDays = Math.round(diffMs/86400000);
+  let countdownTxt, countdownCls = '';
+  if (isPast){
+    countdownTxt = 'CONCLUSO';
+  } else if (diffDays <= 0){
+    countdownTxt = 'OGGI'; countdownCls = 'today';
+  } else if (diffDays === 1){
+    countdownTxt = 'DOMANI';
+  } else {
+    countdownTxt = `TRA ${diffDays} GIORNI`;
+  }
+
+  let routeHtml, timeHtml, badgeHtml = '';
+  if (evt.kind === 'segmento'){
+    const s = evt.segmento;
+    routeHtml = `${esc(s.origine||'?')} <span style="opacity:.55">→</span> ${esc(s.destinazione||'?')}`;
+    const {ora} = splitDateTime(s.partenza);
+    timeHtml = (ora||'--:--').split('').map(c=>`<span class="d">${c}</span>`).join('');
+    badgeHtml = `<span class="badge" data-tipo="${s.tipo}">${esc(tipoLabel(s.tipo))}</span>`;
+  } else {
+    routeHtml = `Arrivo a ${esc(evt.tappa.citta||'?')}`;
+    timeHtml = '';
+  }
+
+  const dataStr = evt.kind==='segmento' ? fmtData(splitDateTime(evt.segmento.partenza).data) : fmtData(evt.tappa.dataArrivo);
+
+  // se subito dopo c'è un altro trasporto lo stesso giorno (es. uno scalo), accenniamolo
+  let nextLegHtml = '';
+  if (!isPast && after && after.kind==='segmento'){
+    const sameDay = splitDateTime(after.segmento.partenza||'').data === splitDateTime(evt.kind==='segmento'?evt.segmento.partenza:'').data;
+    if (sameDay){
+      const {ora:oraAfter} = splitDateTime(after.segmento.partenza);
+      nextLegHtml = `<div class="hero-nextleg">Poi: ${esc(after.segmento.origine||'')} → ${esc(after.segmento.destinazione||'')}${oraAfter?' · '+oraAfter:''}</div>`;
+    }
+  }
+
+  hero.innerHTML = `
+    <div class="hero-label"><span class="dot"></span>${isPast ? 'Ultimo evento del viaggio' : 'Prossimo evento'}</div>
+    <div class="hero-route">${routeHtml}</div>
+    <div class="hero-row">
+      <div>
+        ${timeHtml ? `<div class="hero-time">${timeHtml}</div>` : ''}
+        <div class="hero-date">${dataStr}</div>
+      </div>
+      <div class="hero-countdown ${countdownCls}">${countdownTxt}</div>
+    </div>
+    <div class="hero-meta">
+      ${badgeHtml}
+      ${evt.kind==='segmento' && evt.segmento.numero ? `<span><b>${esc(evt.segmento.numero)}</b></span>` : ''}
+      ${evt.kind==='segmento' && evt.segmento.posto ? `<span>Posto <b>${esc(evt.segmento.posto)}</b></span>` : ''}
+    </div>
+    ${nextLegHtml}`;
+}
+
+function renderDocChip(d, tappaId){
+  const inner = d.isPdf
+    ? `<div class="pdf-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>PDF</div>`
+    : `<img src="${d.thumb||''}" alt="${esc(d.nome)}">`;
+  return `
+    <div class="doc-chip">
+      <button style="all:unset; display:block; width:100%; height:100%; cursor:pointer;" onclick="viewDocument('${d.id}')">${inner}</button>
+      <div class="doc-label">${esc(d.nome)}</div>
+      <button class="del-x" onclick="event.stopPropagation(); deleteDocumento('${d.id}', ${tappaId?`'${tappaId}'`:'null'})" aria-label="Elimina">✕</button>
+    </div>`;
+}
+
+function renderDocGenerali(){
+  const wrap = document.getElementById('docGenerali');
+  const docs = state.documentiGenerali || [];
+  let html = '';
+  if (docs.length === 0){
+    html += `<div class="empty" style="margin-bottom:10px;"><b>Nessun documento ancora</b>Carica qui passaporto, JR Pass, assicurazione o altro materiale che riguarda tutto il viaggio.</div>`;
+  }
+  html += `<div class="doc-grid">`;
+  docs.forEach(d=> html += renderDocChip(d, null));
+  html += `
+    <button class="doc-add" onclick="openDocForm(null)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Aggiungi
+    </button>
+  </div>`;
+  wrap.innerHTML = html;
+}
+
+function renderTimeline(){
+  const wrap = document.getElementById('timeline');
+  const countEl = document.getElementById('tappeCount');
+  const tappe = [...state.tappe].sort((a,b)=>(a.dataArrivo||'').localeCompare(b.dataArrivo||''));
+  countEl.textContent = tappe.length ? `${tappe.length} ${tappe.length===1?'tappa':'tappe'}` : '';
+
+  if (tappe.length === 0){
+    wrap.innerHTML = `<div class="empty"><b>Nessuna tappa ancora</b>Aggiungi la prima città del tuo itinerario per iniziare.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = tappe.map((t,i)=>renderTappaCard(t,i+1)).join('');
+}
+
+function renderTappaCard(t, num){
+  const giorni = [...(t.giorni||[])].sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  const segmenti = [...(t.segmenti||[])].sort((a,b)=>(a.partenza||'').localeCompare(b.partenza||''));
+  const documenti = t.documenti || [];
+  const range = t.dataArrivo && t.dataPartenza ? `${fmtDataBreve(t.dataArrivo)} – ${fmtData(t.dataPartenza)}`
+              : t.dataArrivo ? `Dal ${fmtData(t.dataArrivo)}` : 'Date da definire';
+
+  function renderSegmentoRow(s){
+    const {ora} = splitDateTime(s.partenza);
+    const {ora:oraArr} = splitDateTime(s.arrivo);
+    const metaParts = [];
+    if (s.numero) metaParts.push(esc(s.numero));
+    if (s.posto) metaParts.push('Posto '+esc(s.posto));
+    if (s.note) metaParts.push(esc(s.note));
+    const mapsUrl = mapsLinkFor(s);
+    return `
+    <div class="segmento">
+      <div class="segmento-top">
+        <span class="badge" data-tipo="${s.tipo}">${esc(tipoLabel(s.tipo))}</span>
+        <div class="segmento-top-right">
+          <span class="segmento-time">${ora||'--:--'}${oraArr?` → ${oraArr}`:''}</span>
+          <button class="icon-btn" style="width:28px;height:28px;border-radius:8px;" onclick="openSegmentoForm('${t.id}','${s.id}')" aria-label="Modifica">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="segmento-route">${esc(s.origine||'')}${(s.origine&&s.destinazione)?'<span class="arrow"> → </span>':''}${esc(s.destinazione||'')}</div>
+      ${metaParts.length?`<div class="segmento-meta">${metaParts.join(' · ')}</div>`:''}
+      ${mapsUrl?`<a class="segmento-maps" href="${mapsUrl}" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Apri il percorso in Maps
+      </a>`:''}
+    </div>`;
+  }
+
+  const usedSegIds = new Set();
+  let giorniHtml = giorni.length ? giorni.map(g=>{
+    const matchSeg = segmenti.filter(s=>splitDateTime(s.partenza).data === g.data);
+    matchSeg.forEach(s=>usedSegIds.add(s.id));
+    const weekday = fmtWeekday(g.data);
+    return `
+    <details class="giorno">
+      <summary>
+        <div class="giorno-head">
+          <div class="giorno-heading">
+            <div class="giorno-data">${fmtData(g.data)}${weekday?' · '+weekday:''}</div>
+            ${g.titolo?`<div class="giorno-titolo">${esc(g.titolo)}</div>`:''}
+          </div>
+          <div class="giorno-actions">
+            <button class="icon-btn" style="width:28px;height:28px;border-radius:8px;" onclick="event.stopPropagation(); event.preventDefault(); openGiornoForm('${t.id}','${g.id}')" aria-label="Modifica giorno">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </button>
+            <span class="giorno-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </div>
+        </div>
+      </summary>
+      <div class="giorno-body">
+        ${g.note?`<div class="giorno-note">${esc(g.note)}</div>`:''}
+        ${matchSeg.length?`<div class="giorno-segmenti">${matchSeg.map(renderSegmentoRow).join('')}</div>`:''}
+      </div>
+    </details>`;
+  }).join('') : `<div class="empty" style="padding:14px;">Nessun giorno ancora. Aggiungi il programma giorno per giorno di questa tappa.</div>`;
+
+  const orfani = segmenti.filter(s=>!usedSegIds.has(s.id));
+  const orfaniHtml = orfani.length
+    ? `<div class="tappa-block"><div class="blk-head"><h4>Altri trasporti</h4><span class="sub" style="font-family:var(--f-mono); font-size:11px; color:var(--mist);">non legati a un giorno specifico</span></div>${orfani.map(renderSegmentoRow).join('')}</div>`
+    : '';
+
+  let docHtml = `<div class="doc-grid">`;
+  documenti.forEach(d=> docHtml += renderDocChip(d, t.id));
+  docHtml += `
+    <button class="doc-add" onclick="openDocForm('${t.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Aggiungi
+    </button>
+  </div>`;
+
+  const hotelUrl = (t.alloggio && t.alloggio.nome) ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(t.alloggio.nome+', '+(t.citta||''))}` : null;
+  const ci = t.cittaInfo || {};
+  const fattiList = (ci.fatti||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const cittaInfoHtml = (ci.tagline || fattiList.length) ? `
+    <div class="citta-info">
+      ${ci.tagline?`<p class="tagline">${esc(ci.tagline)}</p>`:''}
+      ${fattiList.length?`<ul>${fattiList.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
+    </div>` : '';
+
+  const alloggioHtml = (t.alloggio && t.alloggio.nome) ? `
+    <div class="alloggio-card">
+      <div class="nome">${esc(t.alloggio.nome)}</div>
+      ${t.alloggio.indirizzo?`<div class="riga">${esc(t.alloggio.indirizzo)}</div>`:''}
+      ${(t.alloggio.checkIn||t.alloggio.checkOut)?`<div class="riga"><b>Check-in/out:</b> ${esc(t.alloggio.checkIn||'?')} → ${esc(t.alloggio.checkOut||'?')}</div>`:''}
+      ${t.alloggio.note?`<div class="riga">${esc(t.alloggio.note)}</div>`:''}
+      ${hotelUrl?`<a class="hotel-maps-btn" href="${hotelUrl}" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Apri hotel in Maps
+      </a>`:''}
+    </div>` : `<div class="empty" style="padding:14px;">Nessun alloggio registrato.</div>`;
+
+  const noteTappaHtml = (t.note && t.note.trim())
+    ? `<div class="tappa-block"><div class="blk-head"><h4>Appunti</h4></div><div class="tappa-note-block">${esc(t.note)}</div></div>`
+    : '';
+
+  return `
+    <details class="tappa">
+      <summary>
+        <span class="tappa-num">${String(num).padStart(2,'0')}</span>
+        <div class="tappa-info">
+          <h3>${esc(t.citta || 'Tappa senza nome')}</h3>
+          <div class="range">${range}</div>
+        </div>
+        <span class="tappa-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+      </summary>
+      <div class="tappa-body">
+        ${cittaInfoHtml?`<div class="tappa-block"><div class="blk-head"><h4>Da sapere</h4></div>${cittaInfoHtml}</div>`:''}
+        <div class="tappa-block">
+          <div class="blk-head"><h4>Alloggio</h4></div>
+          ${alloggioHtml}
+        </div>
+        <div class="tappa-block">
+          <div class="blk-head"><h4>Giorno per giorno</h4></div>
+          ${giorniHtml}
+        </div>
+        ${orfaniHtml}
+        ${noteTappaHtml}
+        <div class="tappa-block">
+          <div class="blk-head"><h4>Biglietti e documenti</h4></div>
+          ${docHtml}
+        </div>
+        <div class="tappa-footer-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openGiornoForm('${t.id}')">+ Giorno</button>
+          <button class="btn btn-ghost btn-sm" onclick="openSegmentoForm('${t.id}')">+ Trasporto</button>
+          <button class="btn btn-ghost btn-sm" onclick="openTappaForm('${t.id}')">Modifica tappa</button>
+          <button class="btn-danger-text" onclick="deleteTappa('${t.id}')">Elimina tappa</button>
+        </div>
+      </div>
+    </details>`;
+}
+
+/* =========================================================================
+   MODAL — generico
+   ========================================================================= */
+function openModal(html){
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.getElementById('modalBody').innerHTML = '';
+}
+
+/* ---- Trip form ---- */
+function openTripForm(){
+  const t = state.trip;
+  openModal(`
+    <h3>Il tuo viaggio</h3>
+    <div class="field"><label>Titolo</label><input id="ft-titolo" value="${esc(t.titolo)}" placeholder="Es. Giappone — Luna di miele"></div>
+    <div class="field-row">
+      <div class="field"><label>Data inizio</label><input type="date" id="ft-inizio" value="${esc(t.dataInizio)}"></div>
+      <div class="field"><label>Data fine</label><input type="date" id="ft-fine" value="${esc(t.dataFine)}"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="submitTripForm()">Salva</button>
+    </div>
+  `);
+}
+async function submitTripForm(){
+  state.trip.titolo = document.getElementById('ft-titolo').value.trim() || 'Giappone';
+  state.trip.dataInizio = document.getElementById('ft-inizio').value;
+  state.trip.dataFine = document.getElementById('ft-fine').value;
+  closeModal();
+  await saveState();
+  render();
+}
+
+/* ---- Note generali form ---- */
+function openNoteGeneraliForm(){
+  openModal(`
+    <h3>Informazioni utili</h3>
+    <div class="field"><label>Appunti</label><textarea id="fn-note" rows="14" placeholder="Numero agenzia, password Wi-Fi, info SUICA, JR Pass, frasi utili…">${esc(state.trip.noteGenerali)}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="submitNoteGeneraliForm()">Salva</button>
+    </div>
+  `);
+}
+async function submitNoteGeneraliForm(){
+  state.trip.noteGenerali = document.getElementById('fn-note').value;
+  closeModal();
+  await saveState();
+  render();
+}
+
+/* ---- Tappa form ---- */
+function openTappaForm(id){
+  const t = id ? state.tappe.find(x=>x.id===id) : {citta:'',dataArrivo:'',dataPartenza:'',alloggio:{},note:'',cittaInfo:{}};
+  const a = t.alloggio || {};
+  const ci = t.cittaInfo || {};
+  openModal(`
+    <h3>${id?'Modifica tappa':'Nuova tappa'}</h3>
+    <input type="hidden" id="f-id" value="${id||''}">
+    <div class="field"><label>Città</label><input id="f-citta" value="${esc(t.citta)}" placeholder="Es. Kyoto" autofocus></div>
+    <div class="field-row">
+      <div class="field"><label>Arrivo</label><input type="date" id="f-arrivo" value="${esc(t.dataArrivo)}"></div>
+      <div class="field"><label>Partenza</label><input type="date" id="f-partenza" value="${esc(t.dataPartenza)}"></div>
+    </div>
+    <div class="field"><label>Alloggio — nome</label><input id="f-alloggioNome" value="${esc(a.nome)}" placeholder="Es. Ryokan Sakura"></div>
+    <div class="field"><label>Alloggio — indirizzo</label><input id="f-alloggioIndirizzo" value="${esc(a.indirizzo)}"></div>
+    <div class="field-row">
+      <div class="field"><label>Check-in</label><input id="f-checkin" value="${esc(a.checkIn)}" placeholder="15:00"></div>
+      <div class="field"><label>Check-out</label><input id="f-checkout" value="${esc(a.checkOut)}" placeholder="10:00"></div>
+    </div>
+    <div class="field"><label>Città in breve — descrizione</label><input id="f-cittaTagline" value="${esc(ci.tagline)}" placeholder="Una frase che racconta il carattere della città"></div>
+    <div class="field"><label>Città in breve — curiosità (una per riga)</label><textarea id="f-cittaFatti" rows="3" placeholder="Popolazione, cosa la rende famosa, un aneddoto…">${esc(ci.fatti)}</textarea></div>
+    <div class="field"><label>Appunti generali (facoltativi)</label><textarea id="f-note" rows="2" placeholder="Cose che non riguardano un giorno preciso: bagagli da spedire, contatti, promemoria…">${esc(t.note)}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="submitTappaForm()">Salva tappa</button>
+    </div>
+  `);
+}
+async function submitTappaForm(){
+  const id = document.getElementById('f-id').value;
+  const citta = document.getElementById('f-citta').value.trim();
+  if (!citta){ toast('Inserisci almeno il nome della città'); return; }
+  const payload = {
+    citta,
+    dataArrivo: document.getElementById('f-arrivo').value,
+    dataPartenza: document.getElementById('f-partenza').value,
+    alloggio: {
+      nome: document.getElementById('f-alloggioNome').value.trim(),
+      indirizzo: document.getElementById('f-alloggioIndirizzo').value.trim(),
+      checkIn: document.getElementById('f-checkin').value.trim(),
+      checkOut: document.getElementById('f-checkout').value.trim(),
+    },
+    cittaInfo: {
+      tagline: document.getElementById('f-cittaTagline').value.trim(),
+      fatti: document.getElementById('f-cittaFatti').value.trim()
+    },
+    note: document.getElementById('f-note').value.trim()
+  };
+  if (id){
+    const t = state.tappe.find(x=>x.id===id);
+    Object.assign(t, payload);
+  } else {
+    state.tappe.push({ id:genId(), ...payload, giorni:[], segmenti:[], documenti:[] });
+  }
+  closeModal();
+  await saveState();
+  render();
+}
+async function deleteTappa(id){
+  if (!confirm('Eliminare questa tappa e tutti i trasporti e documenti collegati? Non si può annullare.')) return;
+  const t = state.tappe.find(x=>x.id===id);
+  if (t){ for (const d of (t.documenti||[])) await deleteDocBlob(d.id); }
+  state.tappe = state.tappe.filter(x=>x.id!==id);
+  await saveState();
+  render();
+}
+
+/* ---- Segmento form ---- */
+function openSegmentoForm(tappaId, segId){
+  const tappa = state.tappe.find(x=>x.id===tappaId);
+  const s = segId ? tappa.segmenti.find(x=>x.id===segId) : {tipo:'shinkansen',origine:'',destinazione:'',partenza:'',arrivo:'',numero:'',posto:'',note:''};
+  openModal(`
+    <h3>${segId?'Modifica trasporto':'Nuovo trasporto'}</h3>
+    <input type="hidden" id="fs-tappaId" value="${tappaId}">
+    <input type="hidden" id="fs-id" value="${segId||''}">
+    <div class="field"><label>Tipo</label>
+      <select id="fs-tipo">${TIPI_TRASPORTO.map(opt=>`<option value="${opt.v}" ${s.tipo===opt.v?'selected':''}>${opt.l}</option>`).join('')}</select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Da</label><input id="fs-origine" value="${esc(s.origine)}" placeholder="Tokyo"></div>
+      <div class="field"><label>A</label><input id="fs-destinazione" value="${esc(s.destinazione)}" placeholder="Kyoto"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Partenza</label><input type="datetime-local" id="fs-partenza" value="${esc(s.partenza)}"></div>
+      <div class="field"><label>Arrivo (opz.)</label><input type="datetime-local" id="fs-arrivo" value="${esc(s.arrivo)}"></div>
+    </div>
+    <p style="font-size:11.5px; color:var(--mist); margin:-6px 0 13px;">Usa l'orario locale del luogo di partenza.</p>
+    <div class="field-row">
+      <div class="field"><label>N. volo/treno</label><input id="fs-numero" value="${esc(s.numero)}" placeholder="Es. Hikari 505"></div>
+      <div class="field"><label>Posto</label><input id="fs-posto" value="${esc(s.posto)}" placeholder="Es. 14A"></div>
+    </div>
+    <div class="field"><label>Note</label><textarea id="fs-note" rows="2">${esc(s.note)}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="submitSegmentoForm()">Salva</button>
+    </div>
+    ${segId?`<button class="btn-danger-text" style="margin-top:10px;" onclick="deleteSegmento('${tappaId}','${segId}')">Elimina trasporto</button>`:''}
+  `);
+}
+async function submitSegmentoForm(){
+  const tappaId = document.getElementById('fs-tappaId').value;
+  const id = document.getElementById('fs-id').value;
+  const tappa = state.tappe.find(x=>x.id===tappaId);
+  const payload = {
+    tipo: document.getElementById('fs-tipo').value,
+    origine: document.getElementById('fs-origine').value.trim(),
+    destinazione: document.getElementById('fs-destinazione').value.trim(),
+    partenza: document.getElementById('fs-partenza').value,
+    arrivo: document.getElementById('fs-arrivo').value,
+    numero: document.getElementById('fs-numero').value.trim(),
+    posto: document.getElementById('fs-posto').value.trim(),
+    note: document.getElementById('fs-note').value.trim()
+  };
+  if (id){
+    Object.assign(tappa.segmenti.find(x=>x.id===id), payload);
+  } else {
+    tappa.segmenti.push({id:genId(), ...payload});
+  }
+  closeModal();
+  await saveState();
+  render();
+}
+async function deleteSegmento(tappaId, segId){
+  if (!confirm('Eliminare questo trasporto?')) return;
+  const tappa = state.tappe.find(x=>x.id===tappaId);
+  tappa.segmenti = tappa.segmenti.filter(x=>x.id!==segId);
+  closeModal();
+  await saveState();
+  render();
+}
+
+/* ---- Giorno form ---- */
+function openGiornoForm(tappaId, giornoId){
+  const tappa = state.tappe.find(x=>x.id===tappaId);
+  const g = giornoId ? tappa.giorni.find(x=>x.id===giornoId) : {data:tappa.dataArrivo||'', titolo:'', note:''};
+  openModal(`
+    <h3>${giornoId?'Modifica giorno':'Nuovo giorno'}</h3>
+    <input type="hidden" id="fg-tappaId" value="${tappaId}">
+    <input type="hidden" id="fg-id" value="${giornoId||''}">
+    <div class="field"><label>Data</label><input type="date" id="fg-data" value="${esc(g.data)}"></div>
+    <div class="field"><label>Titolo breve</label><input id="fg-titolo" value="${esc(g.titolo)}" placeholder="Es. Kinkaku-ji, Higashiyama, Gion"></div>
+    <div class="field"><label>Programma della giornata</label><textarea id="fg-note" rows="6" placeholder="Cosa fare, come muoversi, orari di massima…">${esc(g.note)}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="submitGiornoForm()">Salva</button>
+    </div>
+    ${giornoId?`<button class="btn-danger-text" style="margin-top:10px;" onclick="deleteGiorno('${tappaId}','${giornoId}')">Elimina giorno</button>`:''}
+  `);
+}
+async function submitGiornoForm(){
+  const tappaId = document.getElementById('fg-tappaId').value;
+  const id = document.getElementById('fg-id').value;
+  const tappa = state.tappe.find(x=>x.id===tappaId);
+  const payload = {
+    data: document.getElementById('fg-data').value,
+    titolo: document.getElementById('fg-titolo').value.trim(),
+    note: document.getElementById('fg-note').value
+  };
+  if (!tappa.giorni) tappa.giorni = [];
+  if (id){
+    Object.assign(tappa.giorni.find(x=>x.id===id), payload);
+  } else {
+    tappa.giorni.push({id:genId(), ...payload});
+  }
+  closeModal();
+  await saveState();
+  render();
+}
+async function deleteGiorno(tappaId, giornoId){
+  if (!confirm('Eliminare questo giorno dal programma?')) return;
+  const tappa = state.tappe.find(x=>x.id===tappaId);
+  tappa.giorni = tappa.giorni.filter(x=>x.id!==giornoId);
+  closeModal();
+  await saveState();
+  render();
+}
+
+/* ---- Documento form ---- */
+function openDocForm(tappaId){
+  openModal(`
+    <h3>Aggiungi documento</h3>
+    <input type="hidden" id="fd-tappaId" value="${tappaId||''}">
+    <div class="field"><label>Etichetta</label><input id="fd-nome" placeholder="Es. Biglietto Shinkansen Tokyo–Kyoto"></div>
+    <div class="field-row" style="flex-wrap:wrap; gap:8px; margin-bottom:13px;">
+      <button type="button" class="btn btn-ghost btn-sm" id="fd-cam-btn" style="flex:1;">📷 Scatta foto</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="fd-lib-btn" style="flex:1;">🖼️ Galleria / PDF</button>
+    </div>
+    <input type="file" id="fd-file-camera" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="fd-file-library" accept="image/*,application/pdf" style="display:none">
+    <div id="fd-preview" style="font-size:13px; color:var(--mist); margin-bottom:10px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" id="fd-save-btn" disabled onclick="submitDocForm()">Carica</button>
+    </div>
+  `);
+  const camInput = document.getElementById('fd-file-camera');
+  const libInput = document.getElementById('fd-file-library');
+  document.getElementById('fd-cam-btn').onclick = ()=>camInput.click();
+  document.getElementById('fd-lib-btn').onclick = ()=>libInput.click();
+  camInput.onchange = e=>handleDocFileChosen(e.target.files[0]);
+  libInput.onchange = e=>handleDocFileChosen(e.target.files[0]);
+}
+let pendingDoc = null;
+async function handleDocFileChosen(file){
+  if (!file) return;
+  const preview = document.getElementById('fd-preview');
+  preview.textContent = 'Elaborazione in corso…';
+  document.getElementById('fd-save-btn').disabled = true;
+  try{
+    pendingDoc = await processFileForUpload(file);
+    preview.innerHTML = pendingDoc.isPdf
+      ? `PDF pronto: ${esc(pendingDoc.nomeFile)}`
+      : `<img src="${pendingDoc.thumb}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:8px;">Immagine pronta`;
+    if (!document.getElementById('fd-nome').value) document.getElementById('fd-nome').value = file.name.replace(/\.[^.]+$/,'');
+    document.getElementById('fd-save-btn').disabled = false;
+  }catch(err){
+    pendingDoc = null;
+    preview.textContent = 'File troppo grande o non valido. Provane un altro (max ~3.5MB).';
+  }
+}
+async function submitDocForm(){
+  if (!pendingDoc){ toast('Scegli prima un file'); return; }
+  const tappaId = document.getElementById('fd-tappaId').value || null;
+  const nome = document.getElementById('fd-nome').value.trim() || 'Documento';
+  const id = genId();
+  const ok = await saveDocBlob(id, pendingDoc.full);
+  if (!ok){ toast('Errore nel salvataggio del documento'); return; }
+  const meta = { id, nome, mimeType: pendingDoc.mimeType, thumb: pendingDoc.thumb, isPdf: pendingDoc.isPdf };
+  if (tappaId){
+    state.tappe.find(x=>x.id===tappaId).documenti.push(meta);
+  } else {
+    state.documentiGenerali.push(meta);
+  }
+  pendingDoc = null;
+  closeModal();
+  await saveState();
+  render();
+}
+async function deleteDocumento(id, tappaId){
+  if (!confirm('Eliminare questo documento?')) return;
+  await deleteDocBlob(id);
+  if (tappaId){
+    const t = state.tappe.find(x=>x.id===tappaId);
+    t.documenti = t.documenti.filter(d=>d.id!==id);
+  } else {
+    state.documentiGenerali = state.documentiGenerali.filter(d=>d.id!==id);
+  }
+  await saveState();
+  render();
+}
+
+/* =========================================================================
+   LIGHTBOX
+   ========================================================================= */
+function findDocMeta(id){
+  for (const d of state.documentiGenerali) if (d.id===id) return d;
+  for (const t of state.tappe) for (const d of (t.documenti||[])) if (d.id===id) return d;
+  return null;
+}
+async function viewDocument(id){
+  const meta = findDocMeta(id);
+  if (!meta) return;
+  const lb = document.getElementById('lightbox');
+  const content = document.getElementById('lightboxContent');
+  content.innerHTML = `<div class="lightbox-loading">Carico ${meta.isPdf?'il PDF':'la foto'}…</div>`;
+  lb.classList.add('show');
+  const full = await loadDocBlob(id);
+  if (!full){ content.innerHTML = `<div class="lightbox-loading">Documento non trovato o non ancora sincronizzato.</div>`; return; }
+  if (meta.isPdf){
+    const a = document.createElement('a');
+    a.href = full; a.download = meta.nome + '.pdf'; document.body.appendChild(a); a.click(); a.remove();
+    content.innerHTML = `<div class="lightbox-loading">Download avviato: ${esc(meta.nome)}</div>`;
+  } else {
+    content.innerHTML = `<img src="${full}" alt="${esc(meta.nome)}"><div class="lightbox-caption">${esc(meta.nome)}</div>`;
+  }
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightboxContent').innerHTML = '';
+}
+
+/* =========================================================================
+   BACKUP — esporta / importa
+   ========================================================================= */
+async function aggiornaContenuti(){
+  if (!confirm('Aggiornare testi e orari con la versione più recente? I documenti che hai caricato (foto/PDF) non verranno toccati, ma le note e gli orari precaricati verranno sovrascritti. Continuare?')) return;
+  const fresh = buildSeedState();
+  // preserve any real uploads (documenti) per tappa esistente, e i documenti generali
+  fresh.documentiGenerali = state.documentiGenerali || [];
+  fresh.tappe.forEach(t => {
+    const old = (state.tappe || []).find(x => x.id === t.id);
+    if (old && old.documenti && old.documenti.length) t.documenti = old.documenti;
+  });
+  // mantieni eventuali tappe aggiunte a mano dall'utente che non esistono nel template
+  const freshIds = new Set(fresh.tappe.map(t => t.id));
+  (state.tappe || []).forEach(t => {
+    if (!freshIds.has(t.id)) fresh.tappe.push(t);
+  });
+  state = fresh;
+  await saveState();
+  render();
+  toast('Contenuti aggiornati alla versione più recente');
+}
+
+async function exportBackup(){
+  toast('Preparazione backup…');
+  const ids = [];
+  state.documentiGenerali.forEach(d=>ids.push(d.id));
+  state.tappe.forEach(t=>(t.documenti||[]).forEach(d=>ids.push(d.id)));
+  const docs = {};
+  for (const id of ids){ docs[id] = await loadDocBlob(id); }
+  const payload = { state, docs, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+  a.href = url;
+  a.download = `backup-giappone-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast('Backup scaricato');
+}
+function handleImportInput(ev){
+  const file = ev.target.files[0];
+  if (file) importBackup(file);
+  ev.target.value = '';
+}
+async function importBackup(file){
+  if (!confirm('Importare questo backup sovrascriverà i dati attuali su questo dispositivo. Continuare?')) return;
+  try{
+    const text = await file.text();
+    const payload = JSON.parse(text);
+    state = payload.state;
+    for (const [id, val] of Object.entries(payload.docs||{})){
+      if (val) await saveDocBlob(id, val);
+    }
+    await saveState();
+    render();
+    toast('Backup importato');
+  }catch(e){
+    toast('File di backup non valido');
+  }
+}
+
+/* =========================================================================
+   AVVIO
+   ========================================================================= */
+(async function init(){
+  if (!window.indexedDB){
+    storageOk = false;
+  } else {
+    try { await idbOpen(); } catch(e){ storageOk = false; }
+  }
+  await loadState();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  render();
+  if (isFirstRun && storageOk){ await saveState(); }
+  if (!storageOk) toast('Salvataggio automatico non disponibile in questo browser');
+})();
+</script>
+</body>
+</html>
